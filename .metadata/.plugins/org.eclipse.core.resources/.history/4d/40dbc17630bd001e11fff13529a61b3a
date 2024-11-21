@@ -1,0 +1,87 @@
+package com.example.demo.controller;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.web.bind.annotation.*;
+import com.example.demo.Service.EmployeService;
+import com.example.demo.model.Employee;
+
+
+/*
+@Controller
+public class EmployeController {
+	
+	@GetMapping("/")
+	public String home(){
+		return "home";
+	}
+*/
+
+
+
+@RestController
+@RequestMapping("api/v1/")
+public class EmployeController {
+	
+	private final EmployeService EService ;
+	
+	public EmployeController(EmployeService eService) {
+        this.EService = eService;
+    }
+	
+	@PostMapping("/addEmploye")
+	public String saveEmployee(@RequestBody Employee employe) {
+		return EService.saveEmployee(employe);
+	}
+	
+	@GetMapping("/findAllEmployes")
+	public List<Employee> getEmployes(){
+		return EService.getAllEmployee();
+	}
+	
+	@GetMapping("/findAllEmploye/{matricule}")
+	public Optional<Employee> getEmployeByID(@PathVariable String matricule){
+		return EService.getEmploye(matricule);
+	}
+	
+	@DeleteMapping("/deleteEmploye/{matricule}")
+	public String deleteEmployee(@PathVariable String matricule) {
+		return EService.deleteEmployee(matricule);
+	}
+	
+	
+	@PutMapping("/updateEmployee/{matricule}")
+	public void updateEmployee(@RequestBody Employee employe,@PathVariable String matricule) {
+		EService.updateEmployee(employe,matricule);
+	}
+	
+	/*
+	 * version 2
+	@RequestMapping(method=RequestMethod.PUT,value="/Employee/{matricule}")
+	public String updateEmployee(@RequestBody Employee employe,@PathVariable String matricule) {
+		return EService.updateEmployee(employe,matricule);
+	}
+	*/
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

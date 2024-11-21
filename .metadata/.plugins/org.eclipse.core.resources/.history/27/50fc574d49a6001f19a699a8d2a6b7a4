@@ -1,0 +1,68 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://com.dsi.soa.allapis"
+	targetNamespace="http://com.dsi.soa.allapis"
+	elementFormDefault="qualified">
+
+	
+
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" 
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema"
+             xmlns:tns="http://com.dsi.soa.allapis"
+             name="DemandeService"
+             targetNamespace="http://com.dsi.soa.allapis">
+
+    <!-- Types Section -->
+    <types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://com.dsi.soa.allapis"
+                   targetNamespace="http://com.dsi.soa.allapis"
+                   elementFormDefault="qualified">
+
+            <!-- Include your XSD content here -->
+            <xs:import namespace="http://com.dsi.soa.allapis" schemaLocation="demande.xsd" />
+        </xs:schema>
+    </types>
+
+    <!-- Message Definitions -->
+    <message name="getDemandesRequest">
+        <part name="parameters" element="tns:getDemandesRequest" />
+    </message>
+    
+    <message name="getDemandesResponse">
+        <part name="parameters" element="tns:getDemandesResponse" />
+    </message>
+
+    <!-- Port Type -->
+    <portType name="DemandePortType">
+        <operation name="getDemandes">
+            <input message="tns:getDemandesRequest" />
+            <output message="tns:getDemandesResponse" />
+        </operation>
+    </portType>
+
+    <!-- Binding Section -->
+    <binding name="DemandeSoapBinding" type="tns:DemandePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name="getDemandes">
+            <soap:operation soapAction="http://com.dsi.soa.allapis/getDemandes" />
+            <input>
+                <soap:body use="literal" />
+            </input>
+            <output>
+                <soap:body use="literal" />
+            </output>
+        </operation>
+    </binding>
+
+    <!-- Service Section -->
+    <service name="DemandeService">
+        <port name="DemandePort" binding="tns:DemandeSoapBinding">
+            <soap:address location="http://localhost:8087/allService" />
+        </port>
+    </service>
+
+</definitions>
+
+    
+</xs:schema>

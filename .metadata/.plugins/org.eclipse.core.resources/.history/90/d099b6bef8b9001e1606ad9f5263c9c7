@@ -1,0 +1,40 @@
+package com.example.demo.model;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+
+
+
+import org.springframework.data.annotation.Id;
+import jakarta.persistence.Entity;
+//import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+//@Table(name = "Employees")
+
+
+//@Getter
+//@Setter
+//@TOString
+
+//@Document(collection="Employees")
+public class Employee {
+	@Id
+	private int matricule;
+	private String nom;
+	private String prenom;
+	
+	public long getMatricule() {
+		return matricule;
+	}
+	
+	public String getNom() {
+		return nom;
+	}
+	
+	public String getPrenom() {
+		return prenom;
+	}
+	
+	
+}

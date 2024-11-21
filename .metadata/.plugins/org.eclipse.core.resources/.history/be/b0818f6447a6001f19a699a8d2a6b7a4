@@ -1,0 +1,53 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://com.dsi.soa.allapis"
+	targetNamespace="http://com.dsi.soa.allapis"
+	elementFormDefault="qualified">
+
+	
+
+    <xs:complexType name="DemandeInfo">
+	 <xs:sequence>
+		 <xs:element name="id" type="xs:integer"/>
+		 <xs:element name="description" type="xs:string"/>
+		 <xs:element name="poids" type="xs:double"/>
+		 <xs:element name="dimensions" type="xs:string"/>
+		 <xs:element name="status" type="xs:string"/>
+		 <xs:element name="voyage" type="tns:Voyage"/>
+	 </xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Voyage">
+        <xs:sequence>
+            <xs:element name="vol" type="xs:integer"/>
+            <xs:element name="destination" type="xs:string"/>
+            <xs:element name="dateDebut" type="xs:date"/>
+            <xs:element name="dateArrive" type="xs:date"/>
+            <!-- Reference to Voyageur type -->
+            <xs:element name="voyageur" type="tns:Voyageur"/>
+            <!-- List of DemandeInfo, representing "colis" -->
+            <xs:element name="colis" type="tns:DemandeInfo" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Voyageur">
+        <xs:sequence>
+            <xs:element name="id" type="xs:integer"/>
+            <xs:element name="nom" type="xs:string"/>
+            <xs:element name="prenom" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+	<xs:element name="getDemandesRequest"/>
+		
+
+	<xs:element name="getDemandesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Demande" type="tns:DemandeInfo" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+
+    
+</xs:schema>

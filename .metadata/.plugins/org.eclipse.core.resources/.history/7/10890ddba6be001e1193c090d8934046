@@ -1,0 +1,93 @@
+package com.example.demo.Service;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.example.demo.model.Employee;
+import com.example.demo.repository.EmployeeRepositoy;
+
+
+/*
+public class EmployeService {
+	@Autowired
+	private EmployeeRepositoy repository;
+	
+	@GetMapping("/findAllEmployes")
+	public void save(Employee e){
+		EmployeeRepositoy.save(e);
+	}
+	
+	
+}
+*/
+@Service
+public class EmployeService implements IEmployee{
+	
+	@Autowired
+	private EmployeeRepositoy repository;
+	
+
+	@GetMapping("/findAllEmployes")
+	public List<Employee> getEmployes(){
+		return repository.findAll();
+	}
+	
+	@GetMapping("/findAllEmploye/{matricule}")
+	public Optional<Employee> getEmploye(String matricule){
+		return repository.findById(matricule);
+	}
+	
+	@DeleteMapping("/deleteEmploye/{matricule}")
+	public String deleteEmployee(String matricule) {
+		repository.deleteById(matricule);
+		return "Employe deleted with id : "+ matricule;
+	}
+
+	@Override
+	public List<Employee> getAllEmployee() {
+		// TODO Auto-generated method stub
+		return repository.findAll();
+	}
+	
+	@PostMapping("/addEmploye")
+	public String saveEmployee(Employee employe) {
+		repository.save(employe);
+		return "Added Employe with matricule : " + employe.getMatricule();
+	}
+	
+
+	@Override
+	public String updateEmployee(Employee e, int matricule) {
+		// TODO Auto-generated method stub
+            repository.save(e);            
+            return "Employee updated with id : " + matricule;
+    		/*Optional<Employee> optionalEmployee = repository.findById(matricule);
+
+            if (optionalEmployee.isPresent()) {
+                Employee existingEmployee = optionalEmployee.get();
+                
+                existingEmployee.setId(e.getId());
+                existingEmployee.setMatricule(matricule);
+                existingEmployee.setNom(e.getNom());
+                existingEmployee.setPrenom(e.getPrenom());
+            
+        } */
+	}
+
+	
+
+
+}
+

@@ -1,0 +1,109 @@
+package com.dsi.SOA;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
+
+//import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+
+@Entity
+public class Voyage {
+
+	//@GeneratedValue(strategy = GenerationType.AUTO)
+	@Id
+	private Integer vol;
+	
+	private String destination;
+	
+	private LocalDate dateDebut;
+	
+	private LocalDate dateArrive;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="nvoyageur", nullable = false)
+	private Voyageur voyageur;
+	
+	@OneToMany(fetch = FetchType.EAGER,mappedBy = "voyage")
+	private List<Demande> colis; 
+
+
+	public Integer getVol() {
+		return vol;
+	}
+
+	public void setVol(Integer vol) {
+		this.vol = vol;
+	}
+
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
+	public LocalDate getDateDebut() {
+		return dateDebut;
+	}
+
+	public void setDateDebut(LocalDate dateDebut) {
+		this.dateDebut = dateDebut;
+	}
+
+	public LocalDate getDateArrive() {
+		return dateArrive;
+	}
+
+	public void setDateArrive(LocalDate dateArrive) {
+		this.dateArrive = dateArrive;
+	}
+
+	public List<Demande> getColis() {
+		return colis;
+	}
+
+	public List<Demande> setColis(List<Demande> colis) {
+		return this.colis = colis;
+	}
+
+	public Voyage(Integer vol, String destination, LocalDate dateDebut, LocalDate dateArrive, Voyageur voyageur,
+			List<Demande> colis) {
+		super();
+		this.vol = vol;
+		this.destination = destination;
+		this.dateDebut = dateDebut;
+		this.dateArrive = dateArrive;
+		this.voyageur = voyageur;
+		this.colis = colis;
+	}
+
+	public Voyage() {
+		super();
+	}
+
+	/*
+	@Override
+	public String toString() {
+		return "Voyage [vol=" + vol + ", destination=" + destination + ", dateDebut=" + dateDebut + ", dateArrive="
+				+ dateArrive + ", voyageur=" + voyageur + ", colis=" + colis + "]";
+	}
+*/
+
+
+	
+
+	
+	
+}

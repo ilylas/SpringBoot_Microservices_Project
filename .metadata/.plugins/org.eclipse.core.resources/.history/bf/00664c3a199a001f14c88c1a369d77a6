@@ -1,0 +1,138 @@
+package com.dsi.SOA;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
+@Path("/service2")
+public class WebService2 {
+	
+	@Autowired
+	private DemandeRepository demandeRepository ;
+	
+	@Autowired
+	private VoyageRepository voyageRepository ;
+	
+	@Autowired
+	private VoyageurRepository voyageurRepository ;
+	
+	
+	@GET
+	@Path("/Demandes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Demande> GetDemande() {
+		List<Demande> demandes=demandeRepository.findAll();
+		return demandes;
+		//return Response.status(Response.Status.OK).entity(demandes).build();
+		
+	}
+	
+	
+	@POST
+	@Path("/addDemande")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addDemande(Demande demande) {
+	    // Save the new "voyageur" using the repository
+		//if (demande.getId())
+		Demande SavedDemande = demandeRepository.save(demande);
+		
+	    // Return a response indicating success
+	    return Response.status(Response.Status.CREATED)
+	                   .entity(SavedDemande)
+	                   .build();
+	}
+	
+	
+	@PUT
+	@Path("/validerDemande/{vol}/voyageur/{numV}/demande/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response validerDemande(@PathParam("vol") Integer vol,@PathParam("numV") Integer Nvoyageur,@PathParam("id") Long id) {
+		Optional<Voyageur> Voyageur = voyageurRepository.findById(Nvoyageur);
+		Optional<Demande> Demande=demandeRepository.findById(id);
+		System.out.println(Voyageur.toString());
+		if (Voyageur.isPresent()) {
+			List<Voyage> Voyages = Voyageur.get().getVoyages();
+			Voyages.forEach(v -> {
+				if (v.getVol().equals(vol)) {
+					Voyage voyage=v;
+					System.out.println(v.toString());
+					List<Demande> demandes=v.getColis();
+					
+					demandes.forEach(demande -> {
+	                	demande.setStatut("OK");
+	                	demande.setVoyage(voyage);
+	              
+	                });
+					if (Demande.isPresent()) {
+						voyage.setColis(demandes);
+						voyageRepository.save(voyage);
+					}
+
+
+				}
+
+				
+			});
+			return Response.status(Response.Status.OK)
+					.entity(Demande)
+					.build();
+		}
+		return null;
+	}
+	
+	
+	/*
+	@PUT
+    @Path("/addDemande/{vol}/voyageur/{numV}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    //@Transactional
+    public Response validerDemande(@PathParam("vol") Integer vol, @PathParam("numV") Integer Nvoyageur, List<Demande> demandes) {
+        Optional<Voyageur> optionalVoyageur = voyageurRepository.findById(Nvoyageur);
+
+        if (optionalVoyageur.isPresent()) {
+            Voyageur voyageur = optionalVoyageur.get();
+            Optional<Voyage> optionalVoyage = voyageur.getVoyages().stream()
+                    .filter(v -> v.getVol().equals(vol))
+                    .findFirst();
+            System.out.println(optionalVoyage);
+
+            if (optionalVoyage.isPresent()) {
+                Voyage voyage = optionalVoyage.get();
+                demandes.forEach(demande -> {
+                	demande.setStatut("OK");
+                	demande.setVoyage(voyage);
+              
+                });
+                
+                List<Demande> savedDemandes = demandeRepository.saveAll(demandes);
+                voyage.setColis(savedDemandes);
+                voyageRepository.save(voyage);
+
+                return Response.status(Response.Status.OK).entity(savedDemandes).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("Voyage not found").build();
+            }
+        }
+        return Response.status(Response.Status.NOT_FOUND).entity("Voyageur not found").build();
+    }
+	*/
+	
+
+
+}

@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: Gateway
+
+server:
+  port: 8090
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    healthcheck:
+      enabled: true
+
+zuul:
+  routes:
+    calc-service:
+      path: /calc/**
+      service-id: calc-service

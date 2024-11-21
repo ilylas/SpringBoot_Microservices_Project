@@ -1,0 +1,39 @@
+package com.dsi.SOA;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
+@Path("service")
+public class WebService {
+	
+	@Autowired 
+	private CitoyenRepository citoyenRepository;
+	
+	@GET
+	@Path("/citoyen/{cin}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Citoyen getExtraint(@PathParam("cin")String id) {
+		Optional<Citoyen> c= citoyenRepository.findById(id);
+		if (c.isPresent()) {
+			return c.get();
+		}
+		return null;
+	}
+	
+	@GET
+	@Path("/citoyens")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Citoyen> getCitoyen(){
+		return citoyenRepository.findAll();
+	}
+
+}
